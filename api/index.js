@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import contactRoutes from '../routes/contactRoutes.js';
 
+
 const app = express();
 
 // --- CORS Configuration ---
