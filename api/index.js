@@ -1,6 +1,8 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import chatbotRoutes from '../routes/chatbotRoutes.js';
+app.use('/api/chatbot', chatbotRoutes);
 
 const app = express();
 
