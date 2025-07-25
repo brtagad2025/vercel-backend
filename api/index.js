@@ -2,28 +2,21 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import chatbotRoutes from '../routes/chatbotRoutes.js';
-app.use('/api/chatbot', chatbotRoutes);
 
-const app = express();
+const app = express(); // <-- This should come first!
 
-// --- CORS Configuration (More Permissive for Deployment) ---
+// --- CORS Configuration ---
 const allowedOrigins = [
   process.env.FRONTEND_URL,
-  'https://vercel-frontend-dusky-eight.vercel.app', // Your actual frontend URL
-  'http://localhost:5173',
-  'http://localhost:3000'
+  'http://localhost:5173'
 ];
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, Postman, etc.)
-    if (!origin || allowedOrigins.some(allowedOrigin => 
-      typeof allowedOrigin === 'string' ? allowedOrigin === origin : allowedOrigin.test(origin)
-    )) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.error(`❌ Blocked by CORS: ${origin}`);
-      callback(null, true); // Allow for now to debug
+      callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
@@ -33,6 +26,8 @@ app.use(cors({
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+app.use('/api/chatbot', chatbotRoutes);
 
 // --- Import Routes with Error Handling ---
 let contactRoutes;
